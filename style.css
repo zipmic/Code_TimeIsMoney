@@ -1,0 +1,322 @@
+:root {
+  --color-bg:             #0a1a0f;
+  --color-surface:        #112218;
+  --color-surface-border: #1e4d2b;
+  --color-gold:           #c9a84c;
+  --color-gold-bright:    #f0c040;
+  --color-gold-glow:      rgba(201, 168, 76, 0.35);
+  --color-text:           #e8e0c8;
+  --color-text-muted:     #7a9e7a;
+  --color-error:          #e05050;
+  --font-mono: 'Courier New', Courier, monospace;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --radius: 14px;
+  --shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Background animation stage ── */
+
+#money-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+@keyframes money-fall {
+  0% {
+    transform: translateY(-80px) rotate(var(--rot-start));
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.85;
+  }
+  92% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(calc(100vh + 100px)) rotate(var(--rot-end));
+    opacity: 0;
+  }
+}
+
+.money-item {
+  position: absolute;
+  top: 0;
+  animation: money-fall linear forwards;
+  user-select: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 6px var(--color-gold-glow));
+}
+
+/* ── App shell ── */
+
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+/* ── Screens ── */
+
+.screen {
+  display: none;
+  width: 100%;
+  max-width: 480px;
+  flex-direction: column;
+  gap: 1.4rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius);
+  padding: 2rem 1.75rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+.screen.active {
+  display: flex;
+}
+
+/* ── Setup screen ── */
+
+h1 {
+  font-family: var(--font-mono);
+  font-size: clamp(1.9rem, 6vw, 2.8rem);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-align: center;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 28px var(--color-gold-glow), 0 2px 4px rgba(0,0,0,0.5);
+  line-height: 1.1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+input,
+select {
+  background: #0d1f14;
+  border: 1px solid var(--color-surface-border);
+  border-radius: 8px;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  padding: 0.78rem 1rem;
+  width: 100%;
+  min-height: 50px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.22);
+}
+
+input::placeholder {
+  color: #3a5a3a;
+}
+
+/* hide number spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* custom select arrow */
+.field:has(select)::after {
+  content: '▾';
+  position: absolute;
+  right: 1rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+.field:has(select) {
+  position: relative;
+}
+select {
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+select option {
+  background: #0d1f14;
+}
+
+#form-error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  font-weight: 500;
+}
+
+/* ── Buttons ── */
+
+.btn-primary,
+.btn-secondary {
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.88rem 1.5rem;
+  width: 100%;
+  min-height: 52px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.1s, box-shadow 0.18s;
+  letter-spacing: 0.03em;
+}
+
+.btn-primary {
+  background: var(--color-gold);
+  color: #0a1a0f;
+  border: none;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--color-gold-bright);
+  box-shadow: 0 4px 28px rgba(240, 192, 64, 0.45);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-surface-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+}
+
+.btn-secondary:active {
+  transform: scale(0.97);
+}
+
+/* ── Timer screen ── */
+
+.timer-title {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 3.5vw, 1.3rem);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+#elapsed-display {
+  font-family: var(--font-mono);
+  font-size: clamp(2.6rem, 10vw, 5rem);
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+#rate-toggle {
+  background: transparent;
+  border: 1px dashed var(--color-surface-border);
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  padding: 0.55rem 1rem;
+  min-height: 44px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  width: 100%;
+}
+
+#rate-toggle:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  background: rgba(201, 168, 76, 0.06);
+}
+
+#rate-toggle:active {
+  transform: scale(0.98);
+}
+
+.cost-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin-bottom: -0.6rem;
+}
+
+#cost-display {
+  font-family: var(--font-mono);
+  font-size: clamp(2.2rem, 8.5vw, 4.2rem);
+  font-weight: 700;
+  color: var(--color-gold);
+  text-align: center;
+  text-shadow: 0 0 36px var(--color-gold-glow);
+  word-break: break-all;
+  line-height: 1.1;
+}
+
+/* ── Responsive ── */
+
+@media (min-width: 600px) {
+  .screen {
+    padding: 2.5rem 3rem;
+    gap: 1.6rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .screen {
+    padding: 1.5rem 1.25rem;
+  }
+}

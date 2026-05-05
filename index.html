@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time is Money</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="money-stage" aria-hidden="true"></div>
+
+  <div id="app">
+
+    <div id="screen-setup" class="screen">
+      <h1>Time is Money</h1>
+
+      <form id="setup-form" novalidate>
+
+        <div class="field">
+          <label for="wage">Average hourly wage</label>
+          <input id="wage" type="number" min="0.01" step="0.01" placeholder="e.g. 50.00" required>
+        </div>
+
+        <div class="field">
+          <label for="people">People in the meeting</label>
+          <input id="people" type="number" min="1" step="1" placeholder="e.g. 5" required>
+        </div>
+
+        <div class="field">
+          <label for="currency">Currency</label>
+          <select id="currency">
+            <option value="USD">USD — US Dollar</option>
+            <option value="EUR">EUR — Euro</option>
+            <option value="GBP">GBP — British Pound</option>
+            <option value="JPY">JPY — Japanese Yen</option>
+            <option value="CAD">CAD — Canadian Dollar</option>
+            <option value="AUD">AUD — Australian Dollar</option>
+            <option value="CHF">CHF — Swiss Franc</option>
+          </select>
+        </div>
+
+        <div id="form-error" role="alert" aria-live="polite"></div>
+
+        <button type="submit" id="start-btn" class="btn-primary">Start Meeting</button>
+
+      </form>
+    </div>
+
+    <div id="screen-timer" class="screen">
+      <h2 class="timer-title">Time is Money</h2>
+
+      <div id="elapsed-display">00:00:00.0</div>
+
+      <button id="rate-toggle" aria-label="Click to toggle between per second and per hour rate">
+        Loading…
+      </button>
+
+      <div class="cost-label">Total meeting cost</div>
+      <div id="cost-display">—</div>
+
+      <button id="reset-btn" class="btn-secondary">Stop &amp; Reset</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
