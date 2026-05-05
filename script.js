@@ -256,14 +256,30 @@ const MoneyAnimation = {
 const COST_FONT_MAX = 3.8; // rem — starting size JS scales down from
 const COST_FONT_MIN = 0.7; // rem — never go smaller than this
 
+// Off-screen canvas used purely for text measurement — avoids relying on flex layout state
+const _measureCtx = document.createElement('canvas').getContext('2d');
+
 function fitCostText() {
   const el = document.getElementById('cost-display');
-  el.style.fontSize = COST_FONT_MAX + 'rem';
-  if (el.scrollWidth > el.clientWidth) {
-    // One-shot scale: multiply by the ratio that would make it fit, with a small safety margin
-    const fitted = COST_FONT_MAX * (el.clientWidth / el.scrollWidth) * 0.97;
-    el.style.fontSize = Math.max(COST_FONT_MIN, fitted) + 'rem';
+  const text = el.textContent;
+  if (!text) return;
+
+  // Measure available width from the card itself, not the element (which can flex-expand)
+  const card = document.getElementById('screen-timer');
+  const cardStyle = getComputedStyle(card);
+  const availableWidth = card.clientWidth
+    - parseFloat(cardStyle.paddingLeft)
+    - parseFloat(cardStyle.paddingRight);
+
+  const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  _measureCtx.font = `700 ${COST_FONT_MAX * rootPx}px "Courier New", Courier, monospace`;
+  const textWidth = _measureCtx.measureText(text).width;
+
+  let fontSize = COST_FONT_MAX;
+  if (textWidth > availableWidth) {
+    fontSize = Math.max(COST_FONT_MIN, COST_FONT_MAX * (availableWidth / textWidth) * 0.96);
   }
+  el.style.fontSize = fontSize + 'rem';
 }
 
 let _rafId = null;
