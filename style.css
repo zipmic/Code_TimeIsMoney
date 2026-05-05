@@ -298,13 +298,18 @@ select option {
 
 #cost-display {
   font-family: var(--font-mono);
-  font-size: clamp(2.2rem, 8.5vw, 4.2rem);
+  font-size: 3.8rem; /* JS shrinks this to fit — do not clamp here */
   font-weight: 700;
   color: var(--color-gold);
   text-align: center;
   text-shadow: 0 0 36px var(--color-gold-glow);
-  word-break: break-all;
+  white-space: nowrap;
+  overflow: hidden;
   line-height: 1.1;
+}
+
+#screen-timer {
+  max-width: 580px;
 }
 
 /* ── Responsive ── */
