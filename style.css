@@ -252,12 +252,13 @@ select option {
 
 #elapsed-display {
   font-family: var(--font-mono);
-  font-size: clamp(2.6rem, 10vw, 5rem);
+  font-size: clamp(1.6rem, 5.5vw, 2.8rem);
   font-weight: 700;
   color: var(--color-text);
   text-align: center;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   line-height: 1;
+  white-space: nowrap;
 }
 
 #rate-toggle {
