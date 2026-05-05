@@ -253,13 +253,33 @@ const MoneyAnimation = {
 
 // ── Timer engine ──────────────────────────────────────────────────────────────
 
+const COST_FONT_MAX = 3.8; // rem — starting size JS scales down from
+const COST_FONT_MIN = 0.7; // rem — never go smaller than this
+
+function fitCostText() {
+  const el = document.getElementById('cost-display');
+  el.style.fontSize = COST_FONT_MAX + 'rem';
+  if (el.scrollWidth > el.clientWidth) {
+    // One-shot scale: multiply by the ratio that would make it fit, with a small safety margin
+    const fitted = COST_FONT_MAX * (el.clientWidth / el.scrollWidth) * 0.97;
+    el.style.fontSize = Math.max(COST_FONT_MIN, fitted) + 'rem';
+  }
+}
+
 let _rafId = null;
+let _lastCostLen = 0;
 
 function tick() {
   if (!state.running) return;
   state.elapsedMs = Date.now() - state.startTime;
   document.getElementById('elapsed-display').textContent = formatTime(state.elapsedMs);
-  document.getElementById('cost-display').textContent    = formatCurrency(calcCost(state.elapsedMs));
+  const formatted = formatCurrency(calcCost(state.elapsedMs));
+  document.getElementById('cost-display').textContent = formatted;
+  // Only re-measure when the string length changes (new digit added)
+  if (formatted.length !== _lastCostLen) {
+    _lastCostLen = formatted.length;
+    fitCostText();
+  }
   _rafId = requestAnimationFrame(tick);
 }
 
@@ -321,11 +341,13 @@ document.getElementById('setup-form').addEventListener('submit', (e) => {
   state.elapsedMs  = 0;
   state.rateMode   = 'second';
 
+  _lastCostLen = 0;
   document.getElementById('elapsed-display').textContent = formatTime(0);
   document.getElementById('cost-display').textContent    = formatCurrency(0);
   updateRateDisplay();
 
   showScreen('timer');
+  fitCostText();
   startTimer();
 });
 
@@ -352,6 +374,10 @@ document.getElementById('reset-btn').addEventListener('click', () => {
     sel.appendChild(opt);
   });
 })();
+
+window.addEventListener('resize', () => {
+  if (state.running || state.elapsedMs > 0) fitCostText();
+});
 
 MoneyAnimation.start();
 showScreen('setup');
